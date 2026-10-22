@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#163b5c"><title>BC/SC Job Tracker</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brandmark">BC</div>
+    <div><h1>BC/SC Job Tracker</h1><p>Shared job scheduling & completion</p></div>
+    <button id="signOutBtn" class="secondary hidden">Sign out</button>
+  </header>
+  <main>
+    <section id="setupNotice" class="notice hidden">
+      <h2>Connect your shared database</h2>
+      <p>Open <code>config.js</code> and enter your Supabase Project URL and publishable (or anon) key. Do not put a service-role key here.</p>
+    </section>
+    <section id="authPanel" class="panel auth-panel">
+      <h2>Sign in</h2><p class="muted">Use one of the four accounts created for your team.</p>
+      <form id="loginForm">
+        <label>Email<input type="email" id="email" required autocomplete="username" placeholder="you@company.com"></label>
+        <label>Password<input type="password" id="password" required autocomplete="current-password" placeholder="Your password"></label>
+        <button type="submit">Sign in</button>
+      </form>
+      <p id="authMessage" class="message" role="status"></p>
+    </section>
+    <section id="appPanel" class="hidden">
+      <div class="welcome-row"><div><h2>Job overview</h2><p class="muted" id="userLabel"></p></div><button id="addJobBtn">+ Add job</button></div>
+      <div class="stats">
+        <article class="stat"><span>Awaiting PO</span><strong id="statPo">0</strong></article>
+        <article class="stat"><span>In progress</span><strong id="statProgress">0</strong></article>
+        <article class="stat"><span>Completed</span><strong id="statCompleted">0</strong></article>
+        <article class="stat"><span>Not completed</span><strong id="statNotCompleted">0</strong></article>
+      </div>
+      <section class="panel">
+        <div class="toolbar">
+          <input id="searchInput" type="search" placeholder="Search customer, farm, location, technician…">
+          <select id="poFilter" aria-label="Filter purchase order"><option value="">All PO statuses</option><option>PO Received</option><option>PO Not Received</option><option>In Process</option></select>
+          <select id="jobFilter" aria-label="Filter job status"><option value="">All job statuses</option><option>In Progress</option><option>Completed</option><option>Not Completed</option></select>
+          <button id="exportBtn" class="secondary">Export CSV</button>
+        </div>
+        <p id="listMessage" class="message" role="status"></p>
+        <div id="jobsList" class="jobs-list"></div>
+      </section>
+    </section>
+  </main>
+  <dialog id="jobDialog">
+    <form id="jobForm" method="dialog">
+      <div class="dialog-head"><div><h2 id="dialogTitle">Add job</h2><p class="muted">Complete the fields you know. You can edit the job later.</p></div><button type="button" id="closeDialog" class="icon-btn" aria-label="Close">✕</button></div>
+      <input type="hidden" id="jobId">
+      <div class="form-grid">
+        <label>BC/SC Client<input id="client" maxlength="160" placeholder="BC / SC"></label>
+        <label>Area<input id="area" maxlength="160"></label>
+        <label>Customer<input id="customer" maxlength="200" required></label>
+        <label>PO status<select id="poStatus"><option value="">Select status</option><option>PO Received</option><option>PO Not Received</option><option>In Process</option></select></label>
+        <label>Farm/Cellar name<input id="farmCellar" maxlength="200"></label>
+        <label>Location<input id="location" maxlength="250"></label>
+        <label>Date scheduled<input id="dateScheduled" type="date"></label>
+        <label>Contact person<input id="contactPerson" maxlength="160"></label>
+        <label>Contact number<input id="contactNumber" type="tel" maxlength="50" placeholder="Keep leading zeroes"></label>
+        <label>Inventory<textarea id="inventory" rows="2" maxlength="2000"></textarea></label>
+        <label>Technician<input id="technician" maxlength="160"></label>
+        <label>Date completed<input id="dateCompleted" type="date"></label>
+        <label>Job status<select id="jobStatus"><option>In Progress</option><option>Completed</option><option>Not Completed</option></select></label>
+        <label class="wide">Notes / follow-up<textarea id="notes" rows="2" maxlength="3000" placeholder="Optional extra details"></textarea></label>
+      </div>
+      <p id="formMessage" class="message" role="status"></p>
+      <div class="dialog-actions"><button type="button" id="cancelBtn" class="secondary">Cancel</button><button type="submit" id="saveBtn">Save job</button></div>
+    </form>
+  </dialog>
+  <footer>BC/SC Job Tracker · Shared access for your team</footer>
+  <script src="config.js"></script><script src="app.js"></script>
+</body></html>
